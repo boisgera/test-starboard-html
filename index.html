@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Starboard Notebook</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="icon" href="https://cdn.jsdelivr.net/npm/starboard-notebook@0.15.2/dist/favicon.ico">
+        <link href="https://cdn.jsdelivr.net/npm/starboard-notebook@0.15.2/dist/starboard-notebook.css" rel="stylesheet">
+    </head>
+    <body>
+        <script>
+            window.initialNotebookContent = `# %% [markdown]\n# test-JPEG\nTry editing this cell by clicking the pencil on the left!\n# %% [python]\nimport matplotlib.pyplot as plt\nfrom matplotlib.cbook import get_sample_data\n# %% [python]\nwith get_sample_data("grace_hopper.jpg") as file:\n    image_array = plt.imread(file)\n# %% [python]\nimage_array\n# %% [python]\nplt.imshow(image_array)\nplt.show()\n# %% [python]\n# You can import many of the common scientific Python packages such as numpy or pandas\n# A full list can be found here https://github.com/iodide-project/pyodide/tree/master/packages\n# Packages are downloaded and installed dynamically, they are cached afterwards.\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport pyodide\n\n# We use a proxy to get around CORS so we can download the dataset from github\nurl = "https://starboardproxy.com/https://github.com/selva86/datasets/raw/master/mtcars.csv"\n\n# Prepare Data\ndf = pd.read_csv(pyodide.open_url(url))\n\nx = df.loc[:, ['mpg']]\ndf['mpg_z'] = (x - x.mean())/x.std()\ndf['colors'] = ['red' if x < 0 else 'green' for x in df['mpg_z']]\ndf.sort_values('mpg_z', inplace=True)\ndf.reset_index(inplace=True)\n\ndf\n# %% [python]\n# Draw plot\nplt.figure(figsize=(10,8), dpi= 80)\nplt.hlines(y=df.index, xmin=0, xmax=df.mpg_z, color=df.colors, alpha=0.4, linewidth=5)\n\n# Decorations\nplt.gca().set(ylabel='$Model$', xlabel='$Mileage$ (standard deviations)')\nplt.yticks(df.index, df.cars, fontsize=8)\nplt.title('Diverging Bars of Car Mileage', fontdict={'size':16})\nplt.grid(linestyle='--', alpha=0.5)\nplt.show()`;
+            window.starboardArtifactsUrl = `https://cdn.jsdelivr.net/npm/starboard-notebook@0.15.2/dist/`;
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/starboard-notebook@0.15.2/dist/starboard-notebook.js"></script>
+    </body>
+</html>
